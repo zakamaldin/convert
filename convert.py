@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.filedialog import askdirectory
 import os
 from datetime import datetime
+import shutil
 pathDir=''
 def choiceDir():
         global pathDir
@@ -18,8 +19,17 @@ def choiceDir():
         return pathDir
 
 def startConvert():
-        os.mkdir(pathDir +"/BackUp_" + datetime.strftime(datetime.now(),"%Y.%m.%d"))
-        print(pathDir)
+        backUpDir = pathDir +"/BackUp_" + datetime.strftime(datetime.now(),"%Y.%m.%d")
+        os.mkdir(backUpDir)
+        if fileList.size() > 0:
+                items = fileList.get(0,END)
+        for item in items:
+                copyFrom = pathDir + "/" + item
+                copyTo = backUpDir + "/" + item
+                shutil.copy(copyFrom,copyTo)
+                print("From: " + copyFrom)
+                print("To: " + copyTo)
+        
 
 root = Tk()
 root.title('Перенос проекта')
