@@ -1,14 +1,23 @@
 from tkinter import *
 from tkinter.filedialog import askdirectory
+import os
 pathDir=''
 def choiceDir():
-	global pathDir 	
-	pathDir = askdirectory()	
-	pathLabel['text'] = 'Путь: ' +  pathDir
-	return pathDir
-	
+        global pathDir
+        pathDir = askdirectory()        
+        pathLabel['text'] = 'Путь: ' +  pathDir
+        if fileList.size() > 0:
+                fileList.delete(0,END)
+        files = os.listdir(pathDir)
+        cpp = filter(lambda x: x.endswith('.cpp'), files)
+        print(cpp)
+        for file in cpp:
+                fileList.insert(END,file)
+        
+        return pathDir
+
 def startConvert():
-	print(pathDir)
+        print(pathDir)
 
 root = Tk()
 root.title('Перенос проекта')
