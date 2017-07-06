@@ -6,6 +6,8 @@ from datetime import datetime
 import shutil
 import re
 pathDir=''
+regex1 = r"(\bApplication->MessageBox[AW]?\()([^\,]+\,)([^\,]+\,)(\bMB_OK\)\;)"
+subst1 = "$1L$2L$3$4"
 def choiceDir():
         global pathDir
         pathDir = askdirectory()        
@@ -21,7 +23,6 @@ def choiceDir():
 
 def startConvert():
         backUpDir = pathDir +"/BackUp/" + datetime.strftime(datetime.now(),"%Y.%m.%d")
-        pattern = re.compile('(\bApplication->MessageBox[AW]?\()([^\,]+\,)([^\,]+\,)(\bMB_OK\)\;)')
         if not os.path.exists(backUpDir):
                 os.makedirs(backUpDir)
                 if fileList.size() > 0:
@@ -31,10 +32,9 @@ def startConvert():
                         copyFrom = pathDir + "/" + item
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
-                        currFile = open(copyFrom,"r+")
+                        currFile = open(copyFrom,"w+")
                         currLine = currFile.read()
-                        result = pattern.findall(currLine)
-                        print(currLine)
+                        result = re.sub(regex1,subst1, currLine,0)
                         print(result)
                         currFile.close()
                         fileList.itemconfig(index,fg="green")
