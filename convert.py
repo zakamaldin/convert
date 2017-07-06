@@ -21,14 +21,17 @@ def choiceDir():
 
 def startConvert():
         backUpDir = pathDir +"/BackUp/" + datetime.strftime(datetime.now(),"%Y.%m.%d")
+        status = Label(root, text='Перенос завершен', bg = 'gray93').place(x = 20, y = 550, width=400, height=25)
         if not os.path.exists(backUpDir):
                 os.makedirs(backUpDir)
                 if fileList.size() > 0:
                         items = fileList.get(0,END)
-                for item in items:
+                for index, item in enumerate(items):
                         copyFrom = pathDir + "/" + item
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
+                        fileList.itemconfig(index,fg="green")
+                messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
         else:
                 messagebox.showerror("Ошибка!!!","Существует другая резервная копия!")
                 
@@ -49,5 +52,7 @@ butChoiceDir.place(x = 295, y = 500, width=100, height=25)
 
 butStartConvert = Button(root,text ='Начать перенос', command = startConvert)
 butStartConvert.place(x = 405, y = 500, width=100, height=25)
+
+
 
 root.mainloop()
