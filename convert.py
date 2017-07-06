@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 import os
 from datetime import datetime
@@ -19,17 +20,18 @@ def choiceDir():
         return pathDir
 
 def startConvert():
-        backUpDir = pathDir +"/BackUp_" + datetime.strftime(datetime.now(),"%Y.%m.%d")
-        os.mkdir(backUpDir)
-        if fileList.size() > 0:
-                items = fileList.get(0,END)
-        for item in items:
-                copyFrom = pathDir + "/" + item
-                copyTo = backUpDir + "/" + item
-                shutil.copy(copyFrom,copyTo)
-                print("From: " + copyFrom)
-                print("To: " + copyTo)
-        
+        backUpDir = pathDir +"/BackUp/" + datetime.strftime(datetime.now(),"%Y.%m.%d")
+        if not os.path.exists(backUpDir):
+                os.makedirs(backUpDir)
+                if fileList.size() > 0:
+                        items = fileList.get(0,END)
+                for item in items:
+                        copyFrom = pathDir + "/" + item
+                        copyTo = backUpDir + "/" + item
+                        shutil.copy(copyFrom,copyTo)
+        else:
+                messagebox.showerror("Ошибка!!!","Существует другая резервная копия!")
+                
 
 root = Tk()
 root.title('Перенос проекта')
