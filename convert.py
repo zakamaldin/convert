@@ -4,6 +4,7 @@ from tkinter.filedialog import askdirectory
 import os
 from datetime import datetime
 import shutil
+import re
 pathDir=''
 def choiceDir():
         global pathDir
@@ -20,6 +21,7 @@ def choiceDir():
 
 def startConvert():
         backUpDir = pathDir +"/BackUp/" + datetime.strftime(datetime.now(),"%Y.%m.%d")
+        pattern = re.compile('(\bApplication->MessageBox[AW]?\()([^\,]+\,)([^\,]+\,)(\bMB_OK\)\;)')
         if not os.path.exists(backUpDir):
                 os.makedirs(backUpDir)
                 if fileList.size() > 0:
@@ -29,6 +31,12 @@ def startConvert():
                         copyFrom = pathDir + "/" + item
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
+                        currFile = open(copyFrom,"r+")
+                        currLine = currFile.read()
+                        result = pattern.findall(currLine)
+                        print(currLine)
+                        print(result)
+                        currFile.close()
                         fileList.itemconfig(index,fg="green")
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
         else:
@@ -58,7 +66,5 @@ butChoiceDir.place(x = 120, y = 500, width=100, height=25)
 
 butStartConvert = Button(root,text ='Начать перенос', command = startConvert)
 butStartConvert.place(x = 230, y = 500, width=100, height=25)
-
-
 
 root.mainloop()
