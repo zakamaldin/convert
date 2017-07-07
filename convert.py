@@ -6,7 +6,6 @@ from datetime import datetime
 import shutil
 import re
 pathDir=''
-#regex = r"(\bApplication->MessageBox[AW]?\()([^L][^\,]+\,)([^L][^\,]+\,)(\bMB_OK\)\;)"
 regex = r'Application->MessageBox[AW]?\("(.+)","(.+)",MB_OK\);'
 subst = r'Application->MessageBox(L"\1",L"\2",MB_OK);'
 def choiceDir():
@@ -35,10 +34,13 @@ def startConvert():
                         shutil.copy(copyFrom,copyTo)
                         currFile = open(copyFrom,"r")
                         currLine = currFile.read()
+                        currFile.close()
                         print(currLine)
                         print("\n\n\n")                               
                         result = re.sub(regex,subst, currLine,0)
                         print(result)
+                        currFile = open(copyFrom,"w")
+                        currFile.write(result)
                         currFile.close()
                         fileList.itemconfig(index,fg="green")
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
