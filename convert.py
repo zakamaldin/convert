@@ -6,8 +6,7 @@ from datetime import datetime
 import shutil
 import re
 pathDir=''
-regex1 = r"(\bApplication->MessageBox[AW]?\()([^\,]+\,)([^\,]+\,)(\bMB_OK\)\;)"
-subst1 = "$1L$2L$3$4"
+regex1 = r"(\bApplication->MessageBox[AW]?\()([^L][^\,]+\,)([^L][^\,]+\,)(\bMB_OK\)\;)"
 def choiceDir():
         global pathDir
         pathDir = askdirectory()        
@@ -35,8 +34,14 @@ def startConvert():
                         currFile = open(copyFrom,"r")
                         currLine = currFile.read()
                         print(currLine)
-                        result = re.sub(regex1,subst1, currLine,0)
-                        print(result)
+                        print("\n\n\n")
+                        matches = re.finditer(regex1,currLine)
+                        for match in matches:
+                                print(match)
+                                print("\n")
+                                subst1 = match.group(1)+ "L" + match.group(2)+ "L" + match.group(3) + match.group(4)
+                                result = re.sub(regex1,subst1, currLine,0)
+                                print(result)
                         currFile.close()
                         fileList.itemconfig(index,fg="green")
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
