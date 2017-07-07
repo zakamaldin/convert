@@ -32,8 +32,9 @@ def startConvert():
                         copyFrom = pathDir + "/" + item
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
-                        currFile = open(copyFrom,"w+")
+                        currFile = open(copyFrom,"r")
                         currLine = currFile.read()
+                        print(currLine)
                         result = re.sub(regex1,subst1, currLine,0)
                         print(result)
                         currFile.close()
