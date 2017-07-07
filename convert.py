@@ -6,7 +6,7 @@ from datetime import datetime
 import shutil
 import re
 pathDir=''
-regex = r'Application->MessageBox[AW]?\("(.+)","(.+)",MB_OK\);'
+regex = r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?MB_OK\);'
 subst = r'Application->MessageBox(L"\1",L"\2",MB_OK);'
 def choiceDir():
         global pathDir
@@ -17,18 +17,17 @@ def choiceDir():
         files = os.listdir(pathDir)
         cpp = filter(lambda x: x.endswith('.cpp'), files)
         for file in cpp:
-                fileList.insert(END,file)
-        
-        return pathDir
+                fileList.insert(END,file) 
 
 def startConvert():
         backUpDir = pathDir +"/BackUp/" + datetime.strftime(datetime.now(),"%Y.%m.%d")
         if not os.path.exists(backUpDir):
                 os.makedirs(backUpDir)
+                copyFrom = ""
+                copyTo = ""
                 if fileList.size() > 0:
                         items = fileList.get(0,END)
                 for index, item in enumerate(items):
-                        statusLabel['text'] = 'Копирование: ' +  item
                         copyFrom = pathDir + "/" + item
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
@@ -39,15 +38,15 @@ def startConvert():
                         print("\n\n\n")                               
                         result = re.sub(regex,subst, currLine,0)
                         print(result)
-                        currFile = open(copyFrom,"w")
-                        currFile.write(result)
-                        currFile.close()
+                        if result:
+                                currFile = open(copyFrom,"w")
+                                currFile.write(result)
+                                currFile.close()
                         fileList.itemconfig(index,fg="green")
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
         else:
                 messagebox.showerror("Ошибка!!!","Существует другая резервная копия!")
                 
-
 root = Tk()
 root.title('Перенос проекта')
 root.geometry('450x600')
@@ -56,8 +55,7 @@ root.resizable(width = False, height = False)
 
 pathLabel = Label(root, anchor = W, text = 'Путь: ', bg = 'gray93')
 pathLabel.place(x = 20, y = 30, width = 400, height = 25)
-statusLabel = Label(root,text ='', bg = 'gray93')
-statusLabel.place(x = 20, y = 550, width=400, height=25)
+
 scrollbar = Scrollbar(root)
 scrollbar.pack(side = RIGHT, fill = Y)
 
