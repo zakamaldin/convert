@@ -1,4 +1,4 @@
-from tkinter import *
+﻿from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 import os
@@ -7,23 +7,25 @@ import shutil
 import re
 pathDir=''
 regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
-          r'WINAPI WinMain \(HINSTANCE, HINSTANCE, LPSTR, int\)',
+          r'WINAPI WinMain\(HINSTANCE, HINSTANCE, LPSTR, int\)',
           r'(swap)',
           r'<algorith\.h>',
           r'([C|c]hart)',
           r'([S|s]eries)',
           r'([T|t]eengine)',
           r'([T|t]ee[P|p]rocs)',
+          r'vcl\\registry\.hpp'
         ]
 substr = [
           r'Application->MessageBox(L"\1",L"\2",\3);',
-          r'WINAPI wWinMain (HINSTANCE, HINSTANCE, LPWSTR, int) ',
+          r'WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)',
           r'std::\1',
           r'<utility>',
           r'VCLTee.\1',
           r'VCLTee.\1',
           r'VCLTee.\1',
-          r'VCLTee.\1'
+          r'VCLTee.\1',
+          r'registry.hpp'
          ]
 
 def choiceDir():
