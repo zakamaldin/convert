@@ -6,8 +6,26 @@ from datetime import datetime
 import shutil
 import re
 pathDir=''
-regex = r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?MB_OK\);'
-subst = r'Application->MessageBox(L"\1",L"\2",MB_OK);'
+regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
+          r'WINAPI WinMain \(HINSTANCE, HINSTANCE, LPSTR, int\)',
+          r'(swap)',
+          r'<algorith\.h>',
+          r'([C|c]hart)',
+          r'([S|s]eries)',
+          r'([T|t]eengine)',
+          r'([T|t]ee[P|p]rocs)',
+        ]
+substr = [
+          r'Application->MessageBox(L"\1",L"\2",\3);',
+          r'WINAPI wWinMain (HINSTANCE, HINSTANCE, LPWSTR, int) ',
+          r'std::\1',
+          r'<utility>',
+          r'VCLTee.\1',
+          r'VCLTee.\1',
+          r'VCLTee.\1',
+          r'VCLTee.\1'
+         ]
+
 def choiceDir():
         global pathDir
         pathDir = askdirectory()        
@@ -32,12 +50,10 @@ def startConvert():
                         copyTo = backUpDir + "/" + item
                         shutil.copy(copyFrom,copyTo)
                         currFile = open(copyFrom,"r")
-                        currLine = currFile.read()
+                        result   = currFile.read()
                         currFile.close()
-                        print(currLine)
-                        print("\n\n\n")                               
-                        result = re.sub(regex,subst, currLine,0)
-                        print(result)
+                        for rg,subst in zip(regex, substr):
+                                result = re.sub(rg,subst, result,0)
                         if result:
                                 currFile = open(copyFrom,"w")
                                 currFile.write(result)
