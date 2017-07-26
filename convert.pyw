@@ -5,25 +5,31 @@ import os
 from datetime import datetime
 import shutil
 import re
+include = ('cpp','h')
+exclude = ('pngdib.h')
 pathDir=''
 regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
           r'WINAPI WinMain\(HINSTANCE, HINSTANCE, LPSTR, int\)',
-          r'(swap)',
+          r'(swap\(.+\));',
           r'<algorith\.h>',
           r'([C|c]hart)',
           r'([S|s]eries)',
           r'([T|t]eengine)',
           r'([T|t]ee[P|p]rocs)',
           r'vcl\\registry\.hpp',
-          r'fopen\(([^"].+),(.+)\);',
-          r'fopen\((".+"),(.+)\);',
-          r'sprintf\((.+),(".+"),(.+)\);',
-          r'strcat\((.+),([\s]?".+")\);'
+          r'fopen\(([^"].+),[\s]*(.+)\);',
+          r'fopen\((".+"),[\s]*(.+)\);',
+          r'sprintf\((.+),[\s]*(".+"),(.+)\);',
+          r'strcat\((.+),([\s]*".+")\);',
+          r'char (file_name)',
+          r'#include <Psock\.hpp>',
+          r'TPowersock \*Powersock1;',
+          r'LPCSTR'
         ]
 substr = [
           r'Application->MessageBox(L"\1",L"\2",\3);',
           r'WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)',
-          r'std::\1',
+          r'std::\1;',
           r'<utility>',
           r'VCLTee.\1',
           r'VCLTee.\1',
@@ -33,7 +39,10 @@ substr = [
           r'_wfopen(\1,L\2);',
           r'_wfopen(L\1,L\2);',
           r'wsprintf(\1,L\2,\3);',
-          r'wcscat(\1,L\2);'
+          r'wcscat(\1,L\2);',
+          r'wchar_t \1',
+          r'',
+          r'LPCWSTR'
          ]
 
 def choiceDir():
@@ -43,7 +52,7 @@ def choiceDir():
         if fileList.size() > 0:
                 fileList.delete(0,END)
         files = os.listdir(pathDir)
-        cpp = filter(lambda x: x.endswith('.cpp'), files)
+        cpp = filter(lambda x: x.endswith(include) and not x.endswith(exclude), files)
         for file in cpp:
                 fileList.insert(END,file) 
 
@@ -69,6 +78,7 @@ def startConvert():
                                 currFile.write(result)
                                 currFile.close()
                         fileList.itemconfig(index,fg="green")
+                        #root.mainloop()
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
         else:
                 messagebox.showerror("Ошибка!!!","Существует другая резервная копия!")
