@@ -5,8 +5,8 @@ import os
 from datetime import datetime
 import shutil
 import re
-include = ('cpp','h')
-exclude = ('pngdib.h')
+include = ('.cpp','.h')
+exclude = ('pngdib.h','ddraw.h','fft.h','png.h','pngconf.h','Rtapi.h','zconf.h','zlib.h')
 pathDir=''
 regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
           r'WINAPI WinMain\(HINSTANCE, HINSTANCE, LPSTR, int\)',
@@ -22,9 +22,13 @@ regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
           r'sprintf\((.+),[\s]*(".+"),(.+)\);',
           r'strcat\((.+),([\s]*".+")\);',
           r'char (file_name)',
+          r'LPCSTR',
+          r'char szBitmap\[\] = "ALL";',
+          r'OutputDebugString\((.+)\);'
+          r'_lopen\(szBitmap,',
+          r'char buffer[1];',
           r'#include <Psock\.hpp>',
-          r'TPowersock \*Powersock1;',
-          r'LPCSTR'
+          r'TPowersock \*Powersock1;'
         ]
 substr = [
           r'Application->MessageBox(L"\1",L"\2",\3);',
@@ -41,8 +45,13 @@ substr = [
           r'wsprintf(\1,L\2,\3);',
           r'wcscat(\1,L\2);',
           r'wchar_t \1',
+          r'LPCWSTR',
+          r'wchar_t szBitmap[] = L"ALL";',
+          r'OutputDebugString(L\1);',
+          r'_lopen((LPCSTR)szBitmap',
+          r'wchar_t buffer[1];',
           r'',
-          r'LPCWSTR'
+          r''
          ]
 
 def choiceDir():
