@@ -12,10 +12,10 @@ regex = [ r'Application->MessageBox[AW]?\("(.+)",[\s]?"(.+)",[\s]?(.+)\);',
           r'WINAPI WinMain\(HINSTANCE, HINSTANCE, LPSTR, int\)',
           r'(swap\(.+\));',
           r'<algorith\.h>',
-          r'([C|c]hart)',
-          r'([S|s]eries)',
-          r'([T|t]eengine)',
-          r'([T|t]ee[P|p]rocs)',
+          r'([C|c]hart\.h)',
+          r'([S|s]eries\.h)',
+          r'([T|t]eengine\.h)',
+          r'([T|t]ee[P|p]rocs\.h)',
           r'vcl\\registry\.hpp',
           r'fopen\(([^"].+),[\s]*(.+)\);',
           r'fopen\((".+"),[\s]*(.+)\);',
@@ -87,7 +87,6 @@ def startConvert():
                                 currFile.write(result)
                                 currFile.close()
                         fileList.itemconfig(index,fg="green")
-                        #root.mainloop()
                 messagebox.showinfo("Успех!!!","Перенос успешно завершен!")
         else:
                 messagebox.showerror("Ошибка!!!","Существует другая резервная копия!")
